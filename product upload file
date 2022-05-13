@@ -1,0 +1,46 @@
+import pandas as pd
+import requests
+df = pd.read_excel('product.xlsx')
+url = "https://api.bigcommerce.com/stores/b5ajmj9rbq/v3/catalog/products"
+
+for index, row in df.iterrows():
+    payload = {
+        "name": row['name1'],
+        "type": row['type'],
+        "description": row['description'],
+        "weight": row['weight'],
+        "price": row['price'],
+        "sku":row['sku'],
+         "custom_fields": [
+        {
+            "name": row['name'],
+            "value": row['value']
+        }
+    ],
+     "bulk_pricing_rules": [
+        {
+            "quantity_min": row['quantitymin'],
+            "quantity_max": row['quantitymax'],
+            "type": row['bulktype'],
+            "amount": row['amount']
+        }
+    ],
+    "images": [
+        {
+            "is_thumbnail": True,
+             "image_url":row['image_url']
+        }
+    ],
+    }
+
+    print(payload)
+
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-Auth-Token": "redptv84kmlgfed97l7jroa0mdknfgc",
+        "product_id*":"21"
+    }
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+    print(response.text)
