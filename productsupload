@@ -1,0 +1,45 @@
+df = pd.read_excel('mainproduct.xlsx', engine='openpyxl')
+url = "https://api.bigcommerce.com/stores/b5ajmj9rbq/v3/catalog/products"
+for index, row in df.iterrows():
+        payload = {
+            "name": row['Product Name'],
+            "sku": str(row['SKU']),
+            "type": row['Product Type'],
+            "price": row['Default Price'],
+            "weight": row['Weight '],
+            "description": row['Description'],
+            "width":row['Width'],
+            "depth":row['Depth'],
+            "height":row['Height'],
+            "cost_price":row['Cost'],
+            "retail_price":row['MSRP'],
+            "sale_price":row['Sale Price'],
+            "map_price":row['map_price'],
+            "tax_class_id":row['tax_class_id'],
+            "product_tax_code":row['product_tax_code'],
+            "custom_fields": [
+                {
+                    
+                    "name": row['Custom Field Name'],
+                    "value": row['Custom Field Value']
+                }
+            ]
+            ,
+            "images": [
+                {
+                    "is_thumbnail": True,
+                    "image_url": row['image_url']
+                }
+            ],
+        }
+
+        print(payload)
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Auth-Token": "redptv84kmlgfed97l7jroa0mdknfgc"
+        }
+
+        response = requests.request("POST", url, json=payload, headers=headers)
+        print(response.text)
